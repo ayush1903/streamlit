@@ -1,0 +1,42 @@
+name: CI/CD for Streamlit App
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # Step 4: Test the application
+    - name: Run Streamlit app test
+      run: |
+        streamlit hello --server.headless true
+
+    # Step 5: Deploy (optional step for production branch)
+    - name: Deploy to Streamlit Sharing or Cloud
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo "Deploy logic goes here"
